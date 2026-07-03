@@ -1,0 +1,16 @@
+{
+  "name": "pronose",
+  "private": true,
+  "version": "1.0.0",
+  "description": "proNose — post-rhinectomy rehabilitation tracker (React client + Express/MySQL server)",
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run seed",
+    "install:all": "npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
