@@ -55,13 +55,14 @@ export default function Profile() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="bg-brand">
-        <TopBar title="Profile" rounded={false} />
-        <div className="flex flex-col items-center rounded-b-[2rem] bg-brand px-6 pb-7 pt-2 text-white">
+      <TopBar title="Profile" />
+
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-2 no-scrollbar md:px-8">
+        <div className="glass-card flex flex-col items-center px-6 py-7">
           <button
             type="button"
             onClick={() => editing && fileRef.current?.click()}
-            className={`relative h-24 w-24 rounded-full ring-4 ring-white/60 ${
+            className={`relative h-24 w-24 rounded-full ring-4 ring-brand/30 ${
               editing ? 'cursor-pointer' : 'cursor-default'
             }`}
             aria-label={editing ? 'Change profile picture' : undefined}
@@ -72,7 +73,7 @@ export default function Profile() {
               className="h-24 w-24 rounded-full object-cover"
             />
             {editing && (
-              <span className="absolute inset-0 grid place-items-center rounded-full bg-black/40">
+              <span className="absolute inset-0 grid place-items-center rounded-full bg-ink/40">
                 <Camera size={22} className="text-white" />
               </span>
             )}
@@ -84,19 +85,18 @@ export default function Profile() {
             className="hidden"
             onChange={(e) => pickPhoto(e.target.files?.[0])}
           />
-          <h2 className="mt-3 text-xl font-bold">{currentUser?.name}</h2>
-          <p className="text-sm text-white/80">{roleLabel(currentUser?.role)} · proNose</p>
+          <h2 className="mt-3 text-xl font-bold text-ink">{currentUser?.name}</h2>
+          <p className="text-sm text-brand-dark">{roleLabel(currentUser?.role)} · proNose</p>
         </div>
-      </div>
 
-      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
+        <div className="mt-6">
         <div className="md:grid md:grid-cols-2 md:gap-6">
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-base font-bold text-gray-700">Personal details</h3>
+              <h3 className="text-base font-bold text-ink">Personal details</h3>
               <button
                 onClick={() => (editing ? handleSave() : setEditing(true))}
-                className="flex items-center gap-1 text-sm font-semibold text-brand"
+                className="flex items-center gap-1 text-sm font-semibold text-brand-dark"
               >
                 {editing ? <Check size={16} /> : <Pencil size={14} />}
                 {editing ? 'Save' : 'Edit Profile'}
@@ -113,26 +113,26 @@ export default function Profile() {
 
           {currentUser?.role === 'patient' && (
           <div className="mt-7 md:mt-0">
-            <h3 className="mb-3 text-base font-bold text-gray-700">Care details</h3>
-            <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <h3 className="mb-3 text-base font-bold text-ink">Care details</h3>
+            <div className="rounded-2xl border border-white/70 bg-white/70 p-4 shadow-card backdrop-blur">
           <div className="flex items-center gap-3">
             <img
               src={currentUser?.doctor?.avatar}
               alt={currentUser?.doctor?.name}
-              className="h-12 w-12 rounded-full object-cover"
+              className="h-12 w-12 rounded-full object-cover ring-2 ring-white/70"
             />
             <div>
-              <p className="font-semibold text-gray-800">{currentUser?.doctor?.name}</p>
-              <p className="flex items-center gap-1 text-xs text-gray-400">
+              <p className="font-semibold text-ink">{currentUser?.doctor?.name}</p>
+              <p className="flex items-center gap-1 text-xs text-muted">
                 <Stethoscope size={13} /> {currentUser?.doctor?.specialty}
               </p>
             </div>
           </div>
-          <div className="mt-4 flex items-center gap-3 rounded-xl bg-brand/5 px-4 py-3">
-            <CalendarClock size={20} className="text-brand" />
+          <div className="mt-4 flex items-center gap-3 rounded-xl bg-brand/10 px-4 py-3">
+            <CalendarClock size={20} className="text-brand-dark" />
             <div>
-              <p className="text-xs text-gray-400">Prosthetic installed</p>
-              <p className="text-sm font-semibold text-gray-700">
+              <p className="text-xs text-muted">Prosthetic installed</p>
+              <p className="text-sm font-semibold text-ink">
                 {currentUser?.prostheticInstallDate}
               </p>
             </div>
@@ -141,10 +141,11 @@ export default function Profile() {
           </div>
           )}
         </div>
+        </div>
 
         <button
           onClick={showOnboarding}
-          className="mt-6 flex w-full items-center justify-center gap-2 text-sm font-medium text-gray-400 hover:text-brand"
+          className="mt-6 flex w-full items-center justify-center gap-2 text-sm font-medium text-muted transition hover:text-brand-dark"
         >
           <HelpCircle size={16} /> Replay tutorial
         </button>
@@ -161,21 +162,21 @@ export default function Profile() {
 
 function Field({ icon: Icon, label, name, value, editing, onChange }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-sm">
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
+    <div className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 px-4 py-3 shadow-card backdrop-blur">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand/15 text-brand-dark">
         <Icon size={18} />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-gray-400">{label}</p>
+        <p className="text-xs text-muted">{label}</p>
         {editing && name ? (
           <input
             name={name}
             value={value}
             onChange={onChange}
-            className="w-full rounded-lg bg-input px-2 py-1 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-brand"
+            className="w-full rounded-lg bg-white/80 px-2 py-1 text-sm text-ink outline-none ring-1 ring-white/70 focus:ring-2 focus:ring-brand"
           />
         ) : (
-          <p className="truncate text-sm font-semibold text-gray-700">{value}</p>
+          <p className="truncate text-sm font-semibold text-ink">{value}</p>
         )}
       </div>
     </div>

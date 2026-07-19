@@ -101,7 +101,7 @@ function NewConsultation() {
         )}
       </div>
 
-      <div className="mx-auto flex w-full max-w-2xl gap-3 border-t border-gray-100 px-6 py-4">
+      <div className="mx-auto flex w-full max-w-2xl gap-3 border-t border-white/50 px-6 py-4">
         {step > 0 && (
           <PillButton variant="outline" onClick={() => setStep((s) => s - 1)} className="flex-1">
             Back
@@ -133,17 +133,21 @@ function Stepper({ step }) {
           <div className="flex flex-col items-center gap-1">
             <span
               className={`grid h-7 w-7 place-items-center rounded-full text-xs font-bold transition ${
-                i <= step ? 'bg-brand text-white' : 'bg-brand/15 text-brand'
+                i <= step
+                  ? 'bg-gradient-to-br from-brand to-brand-dark text-white shadow-soft'
+                  : 'bg-white/60 text-brand-dark'
               }`}
             >
               {i + 1}
             </span>
-            <span className={`text-[11px] ${i === step ? 'font-semibold text-brand' : 'text-gray-400'}`}>
+            <span
+              className={`text-[11px] ${i === step ? 'font-semibold text-brand-dark' : 'text-muted'}`}
+            >
               {label}
             </span>
           </div>
           {i < STEPS.length - 1 && (
-            <span className={`mb-4 h-0.5 w-8 rounded ${i < step ? 'bg-brand' : 'bg-brand/20'}`} />
+            <span className={`mb-4 h-0.5 w-8 rounded ${i < step ? 'bg-brand-dark' : 'bg-white/70'}`} />
           )}
         </div>
       ))}
@@ -154,8 +158,8 @@ function Stepper({ step }) {
 function PhotoStep({ photo, fileRef, onFile }) {
   return (
     <div>
-      <h3 className="text-lg font-bold text-gray-800">Upload a prosthetic photo</h3>
-      <p className="mt-1 text-sm text-gray-400">
+      <h3 className="text-lg font-bold text-ink">Upload a prosthetic photo</h3>
+      <p className="mt-1 text-sm text-muted">
         Take a clear, well-lit photo of your prosthetic so your doctor can assess it.
       </p>
 
@@ -174,7 +178,7 @@ function PhotoStep({ photo, fileRef, onFile }) {
           e.preventDefault()
           onFile(e.dataTransfer.files?.[0])
         }}
-        className="mt-5 flex w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-brand/50 bg-input px-6 py-12 text-center transition hover:bg-brand/5"
+        className="mt-5 flex w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-brand/40 bg-white/50 px-6 py-12 text-center backdrop-blur transition hover:bg-white/70"
       >
         {photo ? (
           <>
@@ -185,11 +189,11 @@ function PhotoStep({ photo, fileRef, onFile }) {
           </>
         ) : (
           <>
-            <span className="grid h-16 w-16 place-items-center rounded-full bg-brand/15 text-brand">
+            <span className="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-brand to-brand-dark text-white shadow-soft">
               <UploadCloud size={32} />
             </span>
-            <span className="font-semibold text-gray-700">Tap to upload or drop a photo</span>
-            <span className="text-xs text-gray-400">PNG or JPG, taken in good lighting</span>
+            <span className="font-semibold text-ink">Tap to upload or drop a photo</span>
+            <span className="text-xs text-muted">PNG or JPG, taken in good lighting</span>
           </>
         )}
       </button>
@@ -200,7 +204,7 @@ function PhotoStep({ photo, fileRef, onFile }) {
 function QuestionStep({ answers, setAns }) {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-bold text-gray-800">Medical questionnaire</h3>
+      <h3 className="text-lg font-bold text-ink">Medical questionnaire</h3>
 
       <ShortText
         label="Are you feeling alright?"
@@ -245,38 +249,38 @@ function QuestionStep({ answers, setAns }) {
 function SubmitStep({ comments, setComments, urgent, setUrgent }) {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-bold text-gray-800">Comments &amp; submit</h3>
+      <h3 className="text-lg font-bold text-ink">Comments &amp; submit</h3>
 
       <label className="block">
-        <span className="mb-2 block text-base font-bold text-gray-800">Any additional comments?</span>
+        <span className="mb-2 block text-base font-bold text-ink">Any additional comments?</span>
         <textarea
           rows={5}
           value={comments}
           onChange={(e) => setComments(e.target.value)}
           placeholder="Anything else you'd like your doctor to know..."
-          className="w-full rounded-2xl bg-input px-5 py-4 text-gray-700 placeholder:text-brand/60 outline-none focus:ring-2 focus:ring-brand"
+          className="w-full rounded-2xl border border-white/60 bg-white/70 px-5 py-4 text-ink placeholder:text-muted outline-none focus:ring-2 focus:ring-brand"
         />
       </label>
 
       <button
         onClick={() => setUrgent((u) => !u)}
-        className={`flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left transition ${
-          urgent ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'
+        className={`flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left backdrop-blur transition ${
+          urgent ? 'border-red-400 bg-red-50/80' : 'border-white/70 bg-white/60'
         }`}
       >
         <span
           className={`grid h-10 w-10 place-items-center rounded-full ${
-            urgent ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-400'
+            urgent ? 'bg-red-500 text-white' : 'bg-white/80 text-muted'
           }`}
         >
           <Siren size={20} />
         </span>
         <div className="flex-1">
-          <p className="font-semibold text-gray-800">Flag as Urgent / Emergency</p>
-          <p className="text-xs text-gray-400">Alert your care team immediately</p>
+          <p className="font-semibold text-ink">Flag as Urgent / Emergency</p>
+          <p className="text-xs text-muted">Alert your care team immediately</p>
         </div>
         <span
-          className={`relative h-6 w-11 rounded-full transition ${urgent ? 'bg-red-500' : 'bg-gray-300'}`}
+          className={`relative h-6 w-11 rounded-full transition ${urgent ? 'bg-red-500' : 'bg-muted/40'}`}
         >
           <span
             className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
@@ -298,12 +302,12 @@ function SubmitStep({ comments, setComments, urgent, setUrgent }) {
 function ShortText({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-base font-bold text-gray-800">{label}</span>
+      <span className="mb-2 block text-base font-bold text-ink">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-2xl bg-input px-5 py-3.5 text-gray-700 placeholder:text-brand/60 outline-none focus:ring-2 focus:ring-brand"
+        className="w-full rounded-2xl border border-white/60 bg-white/70 px-5 py-3.5 text-ink placeholder:text-muted outline-none focus:ring-2 focus:ring-brand"
       />
     </label>
   )
@@ -312,16 +316,16 @@ function ShortText({ label, value, onChange, placeholder }) {
 function YesNo({ label, value, onChange, details, onDetails, detailPlaceholder }) {
   return (
     <div>
-      <span className="mb-2 block text-base font-bold text-gray-800">{label}</span>
+      <span className="mb-2 block text-base font-bold text-ink">{label}</span>
       <div className="flex gap-3">
         {['no', 'yes'].map((opt) => (
           <button
             key={opt}
             onClick={() => onChange(opt)}
-            className={`flex-1 rounded-2xl border-2 py-3 text-sm font-semibold capitalize transition ${
+            className={`flex-1 rounded-2xl border-2 py-3 text-sm font-semibold capitalize backdrop-blur transition ${
               value === opt
-                ? 'border-brand bg-brand/10 text-brand-dark'
-                : 'border-gray-200 bg-white text-gray-500'
+                ? 'border-brand bg-brand/15 text-brand-dark'
+                : 'border-white/70 bg-white/60 text-muted'
             }`}
           >
             {opt}
@@ -333,7 +337,7 @@ function YesNo({ label, value, onChange, details, onDetails, detailPlaceholder }
           value={details}
           onChange={(e) => onDetails(e.target.value)}
           placeholder={detailPlaceholder}
-          className="mt-3 w-full rounded-2xl bg-input px-5 py-3.5 text-gray-700 placeholder:text-brand/60 outline-none focus:ring-2 focus:ring-brand animate-fade-in"
+          className="mt-3 w-full rounded-2xl border border-white/60 bg-white/70 px-5 py-3.5 text-ink placeholder:text-muted outline-none focus:ring-2 focus:ring-brand animate-fade-in"
         />
       )}
     </div>
@@ -362,14 +366,14 @@ function ConsultationDetail({ consultation }) {
       <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-bold text-gray-800">
+            <p className="font-bold text-ink">
               {consultation.type === 'emergency' ? 'Urgent Check-in' : 'Weekly Check-in'}
             </p>
-            <p className="text-sm text-gray-400">{consultation.date}</p>
+            <p className="text-sm text-muted">{consultation.date}</p>
           </div>
           <span
             className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-              reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-amber-100 text-amber-600'
+              reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-pastel-peach/30 text-amber-600'
             }`}
           >
             {reviewed ? <CheckCircle2 size={13} /> : <Clock size={13} />}
@@ -385,19 +389,19 @@ function ConsultationDetail({ consultation }) {
 
         <div className="mt-5 space-y-3">
           {rows.map(([q, ans]) => (
-            <div key={q} className="rounded-2xl bg-gray-50 px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{q}</p>
-              <p className="mt-0.5 text-sm text-gray-700">{ans || '—'}</p>
+            <div key={q} className="rounded-2xl border border-white/60 bg-white/60 px-4 py-3 backdrop-blur">
+              <p className="stat-label">{q}</p>
+              <p className="mt-0.5 text-sm text-ink">{ans || '—'}</p>
             </div>
           ))}
         </div>
 
         {reviewed && consultation.doctorNote && (
-          <div className="mt-5 rounded-2xl border border-brand/30 bg-brand/5 p-4">
+          <div className="mt-5 rounded-2xl border border-brand/30 bg-brand/10 p-4 backdrop-blur">
             <p className="text-xs font-bold uppercase tracking-wide text-brand-dark">
               Doctor&apos;s note
             </p>
-            <p className="mt-1 text-sm text-gray-700">{consultation.doctorNote}</p>
+            <p className="mt-1 text-sm text-ink">{consultation.doctorNote}</p>
           </div>
         )}
       </div>

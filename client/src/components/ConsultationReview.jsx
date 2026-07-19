@@ -64,11 +64,15 @@ export default function ConsultationReview({
       <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
         <div className="flex items-center gap-3">
           {personAvatar && (
-            <img src={personAvatar} alt={personName} className="h-10 w-10 rounded-full object-cover" />
+            <img
+              src={personAvatar}
+              alt={personName}
+              className="h-10 w-10 rounded-full object-cover ring-2 ring-white/70"
+            />
           )}
           <div>
-            <p className="font-bold text-gray-800">{personName}</p>
-            <p className="text-sm text-gray-400">{consultation.date}</p>
+            <p className="font-bold text-ink">{personName}</p>
+            <p className="text-sm text-muted">{consultation.date}</p>
           </div>
         </div>
 
@@ -80,21 +84,21 @@ export default function ConsultationReview({
 
         <div className="mt-5 space-y-3">
           {rows.map(([q, ans]) => (
-            <div key={q} className="rounded-2xl bg-gray-50 px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{q}</p>
-              <p className="mt-0.5 text-sm text-gray-700">{ans || '—'}</p>
+            <div key={q} className="rounded-2xl border border-white/60 bg-white/60 px-4 py-3 backdrop-blur">
+              <p className="stat-label">{q}</p>
+              <p className="mt-0.5 text-sm text-ink">{ans || '—'}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-6">
-          <label className="mb-2 block text-base font-bold text-gray-800">Doctor&apos;s note</label>
+          <label className="mb-2 block text-base font-bold text-ink">Doctor&apos;s note</label>
           <textarea
             rows={4}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add guidance for your patient..."
-            className="w-full rounded-2xl bg-input px-5 py-4 text-gray-700 placeholder:text-brand/60 outline-none focus:ring-2 focus:ring-brand"
+            className="w-full rounded-2xl border border-white/60 bg-white/70 px-5 py-4 text-ink placeholder:text-muted outline-none focus:ring-2 focus:ring-brand"
           />
         </div>
 
@@ -111,7 +115,7 @@ export default function ConsultationReview({
 
         {onDeleted &&
           (confirming ? (
-            <div className="mt-4 rounded-2xl border-2 border-red-200 bg-red-50 p-4">
+            <div className="mt-4 rounded-2xl border-2 border-red-200 bg-red-50/80 p-4 backdrop-blur">
               <p className="text-sm font-semibold text-red-600">Delete this consultation permanently?</p>
               <div className="mt-3 flex gap-3">
                 <PillButton variant="outline" onClick={() => setConfirming(false)} className="flex-1">

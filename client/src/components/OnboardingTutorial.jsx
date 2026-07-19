@@ -29,29 +29,29 @@ export default function OnboardingTutorial({ onClose }) {
   const next = () => (isLast ? onClose() : setIndex((i) => i + 1))
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
-      <div className="w-full max-w-sm animate-fade-in rounded-3xl bg-white p-7 text-center shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-4 backdrop-blur-sm sm:items-center">
+      <div className="w-full max-w-sm animate-fade-in rounded-3xl border border-white/70 bg-white/90 p-7 text-center shadow-shell backdrop-blur-xl">
         <button
           onClick={onClose}
           aria-label="Skip tutorial"
-          className="ml-auto block text-gray-400 hover:text-gray-600"
+          className="ml-auto block text-muted hover:text-brand-dark"
         >
           <X size={22} />
         </button>
 
-        <div className="mx-auto mb-6 mt-2 grid h-24 w-24 place-items-center rounded-full bg-brand/15 text-brand">
+        <div className="mx-auto mb-6 mt-2 grid h-24 w-24 place-items-center rounded-full bg-gradient-to-br from-brand to-brand-dark text-white shadow-soft">
           <Icon size={48} strokeWidth={1.8} />
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
-        <p className="mt-3 text-sm leading-relaxed text-gray-500">{body}</p>
+        <h2 className="text-2xl font-bold text-ink">{title}</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted">{body}</p>
 
         <div className="my-6 flex justify-center gap-2">
           {slides.map((_, i) => (
             <span
               key={i}
               className={`h-2 rounded-full transition-all ${
-                i === index ? 'w-6 bg-brand' : 'w-2 bg-brand/25'
+                i === index ? 'w-6 bg-brand-dark' : 'w-2 bg-brand/25'
               }`}
             />
           ))}
@@ -64,7 +64,7 @@ export default function OnboardingTutorial({ onClose }) {
         {!isLast && (
           <button
             onClick={onClose}
-            className="mt-3 text-sm font-medium text-gray-400 hover:text-gray-600"
+            className="mt-3 text-sm font-medium text-muted hover:text-brand-dark"
           >
             Skip
           </button>

@@ -27,17 +27,17 @@ export default function DoctorDashboard() {
     return <PatientConsultations patient={selected} onBack={() => setSelected(null)} />
   }
 
+  const firstName = currentUser?.name?.split(' ')[0] || 'Doctor'
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <TopBar title="My Patients" />
-      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
-        <p className="text-sm text-gray-400">
-          Welcome, {currentUser?.name}. Select a patient to review their consultations.
-        </p>
+      <TopBar eyebrow={`Welcome back, ${firstName} 👋`} title="My Patients" />
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-2 no-scrollbar md:px-8">
+        <p className="text-sm text-muted">Select a patient to review their consultations.</p>
 
         <div className="mt-5 grid gap-3 md:grid-cols-2">
           {patients.length === 0 && (
-            <p className="rounded-2xl bg-gray-50 px-4 py-5 text-center text-sm text-gray-400">
+            <p className="glass-card px-4 py-5 text-center text-sm text-muted">
               No patients assigned to you yet.
             </p>
           )}
@@ -45,14 +45,18 @@ export default function DoctorDashboard() {
             <button
               key={p.id}
               onClick={() => setSelected(p)}
-              className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-brand/40"
+              className="glass-card flex items-center gap-4 p-4 text-left transition hover:bg-white/90"
             >
-              <img src={p.avatar} alt={p.name} className="h-12 w-12 rounded-full object-cover" />
+              <img
+                src={p.avatar}
+                alt={p.name}
+                className="h-12 w-12 rounded-full object-cover ring-2 ring-white/70"
+              />
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-gray-800">{p.name}</p>
-                <p className="truncate text-sm text-gray-400">{p.email}</p>
+                <p className="font-semibold text-ink">{p.name}</p>
+                <p className="truncate text-sm text-muted">{p.email}</p>
               </div>
-              <ChevronRight size={18} className="text-gray-300" />
+              <ChevronRight size={18} className="text-muted/60" />
             </button>
           ))}
         </div>
@@ -92,7 +96,7 @@ function PatientConsultations({ patient, onBack }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <TopBar title={patient.name} showBack onBack={onBack} />
-      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-2 no-scrollbar md:px-8">
         <button
           onClick={() =>
             navigate(`/chat/${patient.id}`, {
@@ -104,14 +108,14 @@ function PatientConsultations({ patient, onBack }) {
               },
             })
           }
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-dark"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-brand to-brand-dark px-5 py-3 text-sm font-semibold text-white shadow-soft transition hover:from-brand-dark hover:to-brand-deep"
         >
           <MessageCircle size={18} /> Message {patient.name.split(' ')[0]}
         </button>
 
         <div className="mt-5 grid gap-3 md:grid-cols-2">
           {consultations.length === 0 && (
-            <p className="rounded-2xl bg-gray-50 px-4 py-5 text-center text-sm text-gray-400">
+            <p className="glass-card px-4 py-5 text-center text-sm text-muted">
               No consultations submitted yet.
             </p>
           )}
@@ -122,24 +126,24 @@ function PatientConsultations({ patient, onBack }) {
               <button
                 key={c.id}
                 onClick={() => setActive(c)}
-                className="flex w-full items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-brand/40"
+                className="glass-card flex w-full items-center gap-4 p-4 text-left transition hover:bg-white/90"
               >
                 <span
-                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${
-                    isEmergency ? 'bg-red-50 text-red-500' : 'bg-brand/10 text-brand'
+                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-white ${
+                    isEmergency ? 'bg-pastel-pink' : 'bg-pastel-lavender'
                   }`}
                 >
                   {isEmergency ? <Siren size={22} /> : <CalendarCheck size={22} />}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-gray-800">
+                  <p className="font-semibold text-ink">
                     {isEmergency ? 'Urgent Check-in' : 'Weekly Check-in'}
                   </p>
-                  <p className="text-sm text-gray-400">{c.date}</p>
+                  <p className="text-sm text-muted">{c.date}</p>
                 </div>
                 <span
                   className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                    reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-amber-100 text-amber-600'
+                    reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-pastel-peach/30 text-amber-600'
                   }`}
                 >
                   {reviewed ? <CheckCircle2 size={13} /> : <Clock size={13} />}

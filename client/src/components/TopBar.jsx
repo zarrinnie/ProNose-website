@@ -1,27 +1,42 @@
 import { ChevronLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
-// Teal header bar matching the mockup: optional back chevron + centered title.
-export default function TopBar({ title, showBack = false, onBack, rounded = true }) {
+// Page header in the glass style: optional teal eyebrow line ("Welcome back…"),
+// big bold navy title, frosted back button, and the signed-in user chip on the
+// right (desktop only) — mirroring the reference mockup's top row.
+export default function TopBar({ title, eyebrow, showBack = false, onBack }) {
   const navigate = useNavigate()
+  const { currentUser } = useAuth()
   const handleBack = onBack || (() => navigate(-1))
 
   return (
-    <div
-      className={`relative flex items-center justify-center bg-brand px-5 pb-5 pt-3 text-white ${
-        rounded ? 'rounded-b-[2rem]' : ''
-      }`}
-    >
+    <div className="flex items-center gap-4 px-6 pb-3 pt-6 md:px-8">
       {showBack && (
         <button
           onClick={handleBack}
           aria-label="Go back"
-          className="absolute left-4 grid h-9 w-9 place-items-center rounded-full transition hover:bg-white/15"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/60 bg-white/60 text-brand-dark shadow-card backdrop-blur transition hover:bg-white/90"
         >
-          <ChevronLeft size={26} strokeWidth={2.5} />
+          <ChevronLeft size={22} strokeWidth={2.5} />
         </button>
       )}
-      <h1 className="text-xl font-bold tracking-wide">{title}</h1>
+
+      <div className="min-w-0 flex-1">
+        {eyebrow && <p className="text-sm font-semibold text-brand-dark">{eyebrow}</p>}
+        <h1 className="truncate text-2xl font-bold text-ink md:text-3xl">{title}</h1>
+      </div>
+
+      {currentUser && (
+        <div className="hidden shrink-0 items-center gap-2.5 md:flex">
+          <img
+            src={currentUser.avatar}
+            alt={currentUser.name}
+            className="h-10 w-10 rounded-full object-cover ring-2 ring-white/70"
+          />
+          <span className="text-sm font-semibold text-ink">{currentUser.name}</span>
+        </div>
+      )}
     </div>
   )
 }

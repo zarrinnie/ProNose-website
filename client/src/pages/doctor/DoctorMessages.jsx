@@ -29,15 +29,15 @@ export default function DoctorMessages() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <TopBar title="Messages" />
-      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
-        <p className="text-sm text-gray-400">
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-2 no-scrollbar md:px-8">
+        <p className="text-sm text-muted">
           {currentUser?.name ? `${currentUser.name}, select` : 'Select'} a patient to open the
           conversation and reply.
         </p>
 
         <div className="mt-5 grid gap-3 md:grid-cols-2">
           {patients.length === 0 && (
-            <p className="rounded-2xl bg-gray-50 px-4 py-5 text-center text-sm text-gray-400">
+            <p className="glass-card px-4 py-5 text-center text-sm text-muted">
               No patients assigned to you yet.
             </p>
           )}
@@ -45,15 +45,19 @@ export default function DoctorMessages() {
             <button
               key={p.id}
               onClick={() => openChat(p)}
-              className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-brand/40"
+              className="glass-card flex items-center gap-4 p-4 text-left transition hover:bg-white/90"
             >
-              <img src={p.avatar} alt={p.name} className="h-12 w-12 rounded-full object-cover" />
+              <img
+                src={p.avatar}
+                alt={p.name}
+                className="h-12 w-12 rounded-full object-cover ring-2 ring-white/70"
+              />
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-gray-800">{p.name}</p>
-                <p className="truncate text-sm text-gray-400">{p.email}</p>
+                <p className="font-semibold text-ink">{p.name}</p>
+                <p className="truncate text-sm text-muted">{p.email}</p>
               </div>
-              <MessageCircle size={18} className="text-brand" />
-              <ChevronRight size={18} className="text-gray-300" />
+              <MessageCircle size={18} className="text-brand-dark" />
+              <ChevronRight size={18} className="text-muted/60" />
             </button>
           ))}
         </div>

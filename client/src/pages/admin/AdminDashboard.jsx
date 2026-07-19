@@ -36,7 +36,7 @@ export default function AdminDashboard() {
     <div className="flex min-h-0 flex-1 flex-col">
       <TopBar title="Admin Console" />
 
-      <div className="border-b border-gray-100 px-6">
+      <div className="border-b border-white/50 px-6 md:px-8">
         <div className="mx-auto flex w-full max-w-5xl gap-1">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
@@ -44,8 +44,8 @@ export default function AdminDashboard() {
               onClick={() => setTab(key)}
               className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
                 tab === key
-                  ? 'border-brand text-brand'
-                  : 'border-transparent text-gray-400 hover:text-gray-600'
+                  ? 'border-brand-dark text-brand-dark'
+                  : 'border-transparent text-muted hover:text-brand-dark'
               }`}
             >
               <Icon size={16} /> {label}
@@ -54,7 +54,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-5xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
+      <div className="mx-auto w-full max-w-5xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar md:px-8">
         {tab === 'users' && <UsersTab />}
         {tab === 'consultations' && <ConsultationsTab />}
         {tab === 'messages' && <MessagesTab />}
@@ -125,13 +125,13 @@ function UsersTab() {
   return (
     <>
       <div className="grid grid-cols-3 gap-3">
-        <StatCard icon={Users} label="Patients" value={counts.patient} />
-        <StatCard icon={Stethoscope} label="Doctors" value={counts.doctor} />
-        <StatCard icon={ShieldCheck} label="Admins" value={counts.super_admin} />
+        <StatCard icon={Users} label="Patients" value={counts.patient} chip="bg-pastel-lavender" />
+        <StatCard icon={Stethoscope} label="Doctors" value={counts.doctor} chip="bg-pastel-pink" />
+        <StatCard icon={ShieldCheck} label="Admins" value={counts.super_admin} chip="bg-pastel-peach" />
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-        <div className="hidden grid-cols-[1.4fr_1fr_1.2fr_auto] gap-4 border-b border-gray-100 px-5 py-3 text-xs font-bold uppercase tracking-wide text-gray-400 md:grid">
+      <div className="glass-card mt-6 overflow-hidden">
+        <div className="stat-label hidden grid-cols-[1.4fr_1fr_1.2fr_auto] gap-4 border-b border-white/60 px-5 py-3.5 md:grid">
           <span>User</span>
           <span>Role</span>
           <span>Assigned doctor</span>
@@ -142,13 +142,17 @@ function UsersTab() {
           return (
             <div
               key={u.id}
-              className="grid grid-cols-1 gap-3 border-b border-gray-50 px-5 py-4 last:border-0 md:grid-cols-[1.4fr_1fr_1.2fr_auto] md:items-center"
+              className="grid grid-cols-1 gap-3 border-b border-white/50 px-5 py-4 last:border-0 md:grid-cols-[1.4fr_1fr_1.2fr_auto] md:items-center"
             >
               <div className="flex items-center gap-3">
-                <img src={u.avatar} alt={u.name} className="h-10 w-10 rounded-full object-cover" />
+                <img
+                  src={u.avatar}
+                  alt={u.name}
+                  className="h-10 w-10 rounded-full object-cover ring-2 ring-white/70"
+                />
                 <div className="min-w-0">
-                  <p className="truncate font-semibold text-gray-800">{u.name}</p>
-                  <p className="truncate text-xs text-gray-400">{u.email}</p>
+                  <p className="truncate font-semibold text-ink">{u.name}</p>
+                  <p className="truncate text-xs text-muted">{u.email}</p>
                 </div>
               </div>
 
@@ -156,7 +160,7 @@ function UsersTab() {
                 value={u.role}
                 disabled={busyId === u.id}
                 onChange={(e) => changeRole(u, e.target.value)}
-                className="rounded-xl bg-input px-3 py-2 text-sm font-medium text-gray-700 outline-none focus:ring-2 focus:ring-brand"
+                className="rounded-xl border border-white/60 bg-white/70 px-3 py-2 text-sm font-medium text-ink outline-none focus:ring-2 focus:ring-brand"
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -170,7 +174,7 @@ function UsersTab() {
                   value={u.assignedDoctorId || ''}
                   disabled={busyId === u.id}
                   onChange={(e) => changeDoctor(u, e.target.value)}
-                  className="rounded-xl bg-input px-3 py-2 text-sm font-medium text-gray-700 outline-none focus:ring-2 focus:ring-brand"
+                  className="rounded-xl border border-white/60 bg-white/70 px-3 py-2 text-sm font-medium text-ink outline-none focus:ring-2 focus:ring-brand"
                 >
                   <option value="">— Unassigned —</option>
                   {doctors.map((d) => (
@@ -180,7 +184,7 @@ function UsersTab() {
                   ))}
                 </select>
               ) : (
-                <span className="text-sm text-gray-300">—</span>
+                <span className="text-sm text-muted/60">—</span>
               )}
 
               <div className="flex justify-end gap-1">
@@ -195,7 +199,7 @@ function UsersTab() {
                     </button>
                     <button
                       onClick={() => setConfirmId(null)}
-                      className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-500"
+                      className="rounded-lg bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted"
                     >
                       Cancel
                     </button>
@@ -205,7 +209,7 @@ function UsersTab() {
                     <button
                       onClick={() => setEditUser(u)}
                       title="Edit user info & picture"
-                      className="grid h-9 w-9 place-items-center rounded-lg text-gray-400 transition hover:bg-gray-50 hover:text-brand"
+                      className="grid h-9 w-9 place-items-center rounded-lg text-muted transition hover:bg-white/70 hover:text-brand-dark"
                     >
                       <Pencil size={16} />
                     </button>
@@ -269,11 +273,11 @@ function EditUserModal({ user, onClose, onSaved }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
-      <div className="w-full max-w-md animate-fade-in rounded-3xl bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-ink/40 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md animate-fade-in rounded-3xl border border-white/60 bg-white/90 p-6 shadow-shell backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-gray-800">Edit user</h3>
-          <button onClick={onClose} aria-label="Close" className="text-gray-400 hover:text-gray-600">
+          <h3 className="text-lg font-bold text-ink">Edit user</h3>
+          <button onClick={onClose} aria-label="Close" className="text-muted hover:text-ink">
             <X size={20} />
           </button>
         </div>
@@ -301,7 +305,7 @@ function EditUserModal({ user, onClose, onSaved }) {
             className="hidden"
             onChange={(e) => pickPhoto(e.target.files?.[0])}
           />
-          <p className="mt-2 text-xs text-gray-400">Tap the photo to change it</p>
+          <p className="mt-2 text-xs text-muted">Tap the photo to change it</p>
         </div>
 
         <div className="mt-5 space-y-3">
@@ -328,12 +332,12 @@ function EditUserModal({ user, onClose, onSaved }) {
 function ModalField({ label, name, value, onChange }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-semibold text-gray-500">{label}</span>
+      <span className="mb-1 block text-xs font-semibold text-muted">{label}</span>
       <input
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full rounded-xl bg-input px-4 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-brand"
+        className="w-full rounded-xl border border-white/60 bg-white/70 px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand"
       />
     </label>
   )
@@ -376,7 +380,7 @@ function ConsultationsTab() {
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {items.length === 0 && (
-        <p className="rounded-2xl bg-gray-50 px-4 py-5 text-center text-sm text-gray-400">
+        <p className="glass-card px-4 py-5 text-center text-sm text-muted">
           No consultations in the system.
         </p>
       )}
@@ -387,24 +391,24 @@ function ConsultationsTab() {
           <button
             key={c.id}
             onClick={() => setActive(c)}
-            className="flex w-full items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-brand/40"
+            className="glass-card flex w-full items-center gap-4 p-4 text-left transition hover:bg-white/90"
           >
             <span
-              className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${
-                isEmergency ? 'bg-red-50 text-red-500' : 'bg-brand/10 text-brand'
+              className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-white ${
+                isEmergency ? 'bg-pastel-pink' : 'bg-pastel-lavender'
               }`}
             >
               {isEmergency ? <Siren size={22} /> : <CalendarCheck size={22} />}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-gray-800">{c.patientName || 'Unknown'}</p>
-              <p className="text-sm text-gray-400">
+              <p className="truncate font-semibold text-ink">{c.patientName || 'Unknown'}</p>
+              <p className="text-sm text-muted">
                 {isEmergency ? 'Urgent' : 'Weekly'} · {c.date}
               </p>
             </div>
             <span
               className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-amber-100 text-amber-600'
+                reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-pastel-peach/30 text-amber-600'
               }`}
             >
               {reviewed ? <CheckCircle2 size={13} /> : <Clock size={13} />}
@@ -474,7 +478,7 @@ function MessagesTab() {
     return (
       <div>
         <div className="flex items-center justify-between">
-          <button onClick={() => setOpenKey(null)} className="text-sm font-semibold text-brand">
+          <button onClick={() => setOpenKey(null)} className="text-sm font-semibold text-brand-dark">
             ← All conversations
           </button>
           <button
@@ -484,7 +488,7 @@ function MessagesTab() {
             <Trash2 size={14} /> Delete conversation
           </button>
         </div>
-        <p className="mt-3 text-base font-bold text-gray-800">
+        <p className="mt-3 text-base font-bold text-ink">
           {open.aName} ↔ {open.bName}
         </p>
 
@@ -496,13 +500,15 @@ function MessagesTab() {
             >
               <div
                 className={`group max-w-[78%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
-                  m.senderId === open.a ? 'bg-white text-gray-700' : 'bg-brand text-white'
+                  m.senderId === open.a
+                    ? 'border border-white/70 bg-white/80 text-ink backdrop-blur'
+                    : 'bg-gradient-to-br from-brand to-brand-dark text-white'
                 }`}
               >
                 <p className="text-[10px] font-semibold opacity-70">{m.senderName}</p>
                 <p className="leading-relaxed">{m.text}</p>
                 <div className="mt-1 flex items-center justify-end gap-2">
-                  <span className={`text-[10px] ${m.senderId === open.a ? 'text-gray-400' : 'text-white/70'}`}>
+                  <span className={`text-[10px] ${m.senderId === open.a ? 'text-muted' : 'text-white/70'}`}>
                     {m.time}
                   </span>
                   <button
@@ -526,7 +532,7 @@ function MessagesTab() {
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {conversations.length === 0 && (
-        <p className="rounded-2xl bg-gray-50 px-4 py-5 text-center text-sm text-gray-400">
+        <p className="glass-card px-4 py-5 text-center text-sm text-muted">
           No conversations in the system.
         </p>
       )}
@@ -536,19 +542,19 @@ function MessagesTab() {
           <button
             key={c.key}
             onClick={() => setOpenKey(c.key)}
-            className="flex w-full items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-brand/40"
+            className="glass-card flex w-full items-center gap-4 p-4 text-left transition hover:bg-white/90"
           >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-pastel-blue text-white">
               <MessageSquare size={20} />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-gray-800">
+              <p className="truncate font-semibold text-ink">
                 {c.aName} ↔ {c.bName}
               </p>
-              <p className="truncate text-sm text-gray-400">{last?.text}</p>
+              <p className="truncate text-sm text-muted">{last?.text}</p>
             </div>
-            <span className="text-xs font-semibold text-gray-400">{c.messages.length}</span>
-            <ChevronRight size={18} className="text-gray-300" />
+            <span className="text-xs font-semibold text-muted">{c.messages.length}</span>
+            <ChevronRight size={18} className="text-muted/60" />
           </button>
         )
       })}
@@ -558,15 +564,15 @@ function MessagesTab() {
 
 /* ---------------- Shared ---------------- */
 
-function StatCard({ icon: Icon, label, value }) {
+function StatCard({ icon: Icon, label, value, chip = 'bg-pastel-lavender' }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-      <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand/10 text-brand">
+    <div className="glass-card flex items-center gap-3 p-4 md:p-5">
+      <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-full text-white ${chip}`}>
         <Icon size={22} />
       </span>
-      <div>
-        <p className="text-2xl font-bold text-gray-800">{value}</p>
-        <p className="text-xs text-gray-400">{label}</p>
+      <div className="min-w-0">
+        <p className="stat-label truncate">{label}</p>
+        <p className="text-2xl font-bold text-ink">{value}</p>
       </div>
     </div>
   )

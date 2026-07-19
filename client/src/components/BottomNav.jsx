@@ -8,7 +8,7 @@ export default function BottomNav() {
   const tabs = navTabs(currentUser?.role)
 
   return (
-    <nav className="sticky bottom-0 z-10 mt-auto flex items-center justify-around border-t border-gray-100 bg-white px-2 py-2.5 md:hidden">
+    <nav className="sticky bottom-0 z-10 mt-auto flex items-center justify-around border-t border-white/50 bg-white/60 px-2 py-2.5 backdrop-blur-xl md:hidden">
       {tabs.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}
@@ -16,7 +16,7 @@ export default function BottomNav() {
           end={end}
           className={({ isActive }) =>
             `flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5 text-xs font-medium transition ${
-              isActive ? 'text-brand' : 'text-gray-400 hover:text-gray-600'
+              isActive ? 'text-brand-dark' : 'text-muted hover:text-brand-dark'
             }`
           }
         >

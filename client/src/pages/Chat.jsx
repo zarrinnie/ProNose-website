@@ -100,29 +100,29 @@ export default function Chat() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="bg-brand">
-        <TopBar title="Chat" showBack rounded={false} />
-        <div className="flex items-center gap-3 rounded-b-[2rem] bg-brand px-6 pb-4">
+      <TopBar title="Chat" showBack />
+      <div className="px-6 pb-3 md:px-8">
+        <div className="glass-card flex items-center gap-3 px-5 py-3">
           {peer?.avatar && (
             <img
               src={peer.avatar}
               alt={peer.name}
-              className="h-11 w-11 rounded-full object-cover ring-2 ring-white/60"
+              className="h-11 w-11 rounded-full object-cover ring-2 ring-white/70"
             />
           )}
-          <div className="text-white">
-            <p className="font-semibold leading-tight">{peer?.name || 'No conversation'}</p>
-            <p className="flex items-center gap-1.5 text-xs text-white/80">
-              <span className="h-2 w-2 rounded-full bg-green-300" /> Online · {peer?.subtitle || ''}
+          <div>
+            <p className="font-semibold leading-tight text-ink">{peer?.name || 'No conversation'}</p>
+            <p className="flex items-center gap-1.5 text-xs text-muted">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" /> Online · {peer?.subtitle || ''}
             </p>
           </div>
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto bg-gray-50 px-4 py-5 no-scrollbar">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-5 no-scrollbar">
         <div className="mx-auto w-full max-w-3xl space-y-3">
           {!peerId ? (
-            <p className="mt-10 text-center text-sm text-gray-400">
+            <p className="mt-10 text-center text-sm text-muted">
               No care team assigned yet. Your doctor will appear here once you're matched.
             </p>
           ) : (
@@ -133,20 +133,20 @@ export default function Chat() {
 
       <form
         onSubmit={send}
-        className="mx-auto flex w-full max-w-3xl items-center gap-2 border-t border-gray-100 bg-white px-4 py-3"
+        className="mx-auto flex w-full max-w-3xl items-center gap-2 border-t border-white/50 bg-white/40 px-4 py-3 backdrop-blur-xl"
       >
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Type a message..."
           disabled={!peerId}
-          className="flex-1 rounded-full bg-input px-5 py-3 text-gray-700 placeholder:text-brand/60 outline-none focus:ring-2 focus:ring-brand disabled:opacity-50"
+          className="flex-1 rounded-full border border-white/60 bg-white/70 px-5 py-3 text-ink placeholder:text-muted outline-none focus:ring-2 focus:ring-brand disabled:opacity-50"
         />
         <button
           type="submit"
           aria-label="Send message"
           disabled={!peerId}
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand text-white shadow-soft transition hover:bg-brand-dark active:scale-95 disabled:opacity-50"
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand to-brand-dark text-white shadow-soft transition hover:from-brand-dark hover:to-brand-deep active:scale-95 disabled:opacity-50"
         >
           <Send size={20} />
         </button>
@@ -160,11 +160,13 @@ function Bubble({ message, mine }) {
     <div className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
       <div
         className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
-          mine ? 'rounded-br-md bg-brand text-white' : 'rounded-bl-md bg-white text-gray-700'
+          mine
+            ? 'rounded-br-md bg-gradient-to-br from-brand to-brand-dark text-white'
+            : 'rounded-bl-md border border-white/70 bg-white/80 text-ink backdrop-blur'
         }`}
       >
         <p className="leading-relaxed">{message.text}</p>
-        <p className={`mt-1 text-right text-[10px] ${mine ? 'text-white/70' : 'text-gray-400'}`}>
+        <p className={`mt-1 text-right text-[10px] ${mine ? 'text-white/70' : 'text-muted'}`}>
           {message.time}
         </p>
       </div>

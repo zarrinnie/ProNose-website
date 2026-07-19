@@ -1,7 +1,7 @@
 // Gradient branding panel for the left side of the auth split-card (desktop only).
 export default function BrandingPanel() {
   return (
-    <div className="relative hidden flex-col justify-center overflow-hidden bg-gradient-to-br from-brand-light via-brand to-brand-dark p-10 text-white md:flex">
+    <div className="relative hidden flex-col justify-center overflow-hidden bg-gradient-to-br from-brand via-brand-dark to-brand-deep p-10 text-white md:flex">
       <h2 className="text-4xl font-extrabold leading-tight">Welcome to proNose</h2>
       <p className="mt-4 max-w-sm text-lg font-medium text-white/90">
         Connection made simple.

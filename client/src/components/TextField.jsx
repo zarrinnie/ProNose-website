@@ -18,7 +18,7 @@ export default function TextField({
   return (
     <label className="block">
       {label && (
-        <span className="mb-2 block text-base font-bold text-gray-800">{label}</span>
+        <span className="mb-2 block text-base font-bold text-ink">{label}</span>
       )}
       <div className="relative">
         <input
@@ -28,7 +28,7 @@ export default function TextField({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
-          className="w-full rounded-2xl bg-input px-5 py-4 text-gray-700 placeholder:text-brand/60 outline-none transition focus:ring-2 focus:ring-brand"
+          className="w-full rounded-2xl border border-white/60 bg-white/70 px-5 py-4 text-ink placeholder:text-muted outline-none transition focus:ring-2 focus:ring-brand"
         />
         {isPassword && (
           <button

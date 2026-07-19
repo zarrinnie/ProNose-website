@@ -21,12 +21,35 @@ body,
 body {
   margin: 0;
   font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  background-color: #f8fafc;
-  color: #1f2933;
+  /* Soft mint → sky → lavender gradient behind the glass panels */
+  background:
+    radial-gradient(55rem 38rem at 88% 6%, rgba(198, 190, 233, 0.85), transparent 62%),
+    radial-gradient(48rem 34rem at 6% 18%, rgba(213, 239, 224, 0.9), transparent 60%),
+    linear-gradient(118deg, #d8ece1 0%, #cfe2e9 48%, #c8c3e6 100%);
+  background-attachment: fixed;
+  color: #1f2547;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hide scrollbars inside the phone frame for a cleaner mobile feel */
+@layer components {
+  /* Frosted panels sitting on the gradient */
+  .glass-card {
+    @apply rounded-3xl border border-white/60 bg-white/60 shadow-card backdrop-blur-xl;
+  }
+  .glass-shell {
+    @apply border border-white/50 bg-white/40 shadow-shell backdrop-blur-2xl;
+  }
+  /* Tiny uppercase tracked label, like "POSSESSION" / "TRANSFER BUDGET" */
+  .stat-label {
+    @apply text-[10px] font-semibold uppercase tracking-[0.16em] text-muted;
+  }
+  /* Small teal action link, like "View all" */
+  .teal-link {
+    @apply text-xs font-semibold text-brand-dark transition hover:text-brand;
+  }
+}
+
+/* Hide scrollbars inside the panels for a cleaner feel */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

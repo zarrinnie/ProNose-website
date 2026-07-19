@@ -34,40 +34,34 @@ export default function Dashboard() {
     <div className="flex min-h-0 flex-1 flex-col">
       {isFirstLogin && <OnboardingTutorial onClose={dismissOnboarding} />}
 
-      <TopBar title="Dashboard" />
+      <TopBar eyebrow={`Welcome back, ${firstName} 👋`} title="Dashboard" />
 
-      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
-        {/* Greeting */}
-        <div className="flex items-center gap-3">
-          <img
-            src={currentUser?.avatar}
-            alt="Your profile"
-            className="h-12 w-12 rounded-full object-cover ring-2 ring-brand/40"
-          />
-          <div>
-            <p className="text-sm text-gray-400">Welcome back,</p>
-            <h2 className="text-xl font-bold text-gray-800">Hello, {firstName}!</h2>
-          </div>
-        </div>
-
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-2 no-scrollbar md:px-8">
         {toast && (
-          <div className="mt-5 flex items-center gap-2 rounded-2xl bg-brand/10 px-4 py-3 text-sm font-medium text-brand-dark animate-fade-in">
+          <div className="glass-card mb-5 flex items-center gap-2 px-4 py-3 text-sm font-medium text-brand-dark animate-fade-in">
             <CheckCircle2 size={18} />
             Consultation submitted{toast.urgent ? ' as urgent' : ''}. Your doctor will review it soon.
           </div>
         )}
 
-        {/* New consultation CTA */}
+        {/* New consultation CTA — deep teal gradient banner */}
         <button
           onClick={() => navigate('/consultation')}
-          className="mt-6 flex w-full items-center justify-between rounded-3xl bg-brand px-6 py-5 text-left text-white shadow-soft transition hover:bg-brand-dark"
+          className="relative flex w-full items-center justify-between overflow-hidden rounded-3xl bg-gradient-to-br from-brand-dark to-brand-deep px-7 py-6 text-left text-white shadow-soft transition hover:from-brand-deep hover:to-brand-deep"
         >
-          <div>
-            <p className="text-lg font-bold">New Consultation</p>
-            <p className="text-sm text-white/80">Submit your weekly check-in</p>
+          <span className="pointer-events-none absolute -right-10 -top-14 h-40 w-40 rounded-full bg-white/10" />
+          <span className="pointer-events-none absolute -bottom-16 right-24 h-32 w-32 rounded-full bg-white/10" />
+          <div className="relative">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
+              Weekly check-in
+            </p>
+            <p className="mt-1 text-2xl font-bold">New Consultation</p>
+            <span className="mt-4 inline-flex items-center rounded-full bg-white px-5 py-2 text-sm font-bold text-brand-dark">
+              Start check-in
+            </span>
           </div>
-          <span className="grid h-11 w-11 place-items-center rounded-full bg-white/20">
-            <Plus size={24} />
+          <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white/20">
+            <Plus size={26} />
           </span>
         </button>
 
@@ -90,14 +84,14 @@ export default function Dashboard() {
 
 function Section({ title, icon: Icon, items, empty }) {
   return (
-    <div className="mt-7">
-      <div className="mb-3 flex items-center gap-2">
-        <Icon size={18} className="text-brand" />
-        <h3 className="text-base font-bold text-gray-700">{title}</h3>
-        <span className="ml-auto text-xs font-semibold text-gray-400">{items.length}</span>
+    <div className="glass-card mt-6 p-5 md:p-6">
+      <div className="mb-4 flex items-center gap-2">
+        <Icon size={18} className="text-brand-dark" />
+        <h3 className="text-base font-bold text-ink">{title}</h3>
+        <span className="teal-link ml-auto">{items.length} total</span>
       </div>
       {items.length === 0 ? (
-        <p className="rounded-2xl bg-gray-50 px-4 py-5 text-center text-sm text-gray-400">
+        <p className="rounded-2xl bg-white/50 px-4 py-5 text-center text-sm text-muted">
           {empty}
         </p>
       ) : (
@@ -119,32 +113,32 @@ function ConsultationCard({ consultation }) {
   return (
     <button
       onClick={() => navigate(`/consultation`, { state: { viewId: consultation.id } })}
-      className="flex w-full items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-brand/40"
+      className="flex w-full items-center gap-4 rounded-2xl border border-white/70 bg-white/70 p-4 text-left shadow-sm transition hover:bg-white/95"
     >
       <span
-        className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${
-          isEmergency ? 'bg-red-50 text-red-500' : 'bg-brand/10 text-brand'
+        className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-white ${
+          isEmergency ? 'bg-pastel-pink' : 'bg-pastel-lavender'
         }`}
       >
         {isEmergency ? <Siren size={22} /> : <CalendarCheck size={22} />}
       </span>
 
       <div className="min-w-0 flex-1">
-        <p className="font-semibold text-gray-800">
+        <p className="font-semibold text-ink">
           {isEmergency ? 'Urgent Check-in' : 'Weekly Check-in'}
         </p>
-        <p className="text-sm text-gray-400">{consultation.date}</p>
+        <p className="text-sm text-muted">{consultation.date}</p>
       </div>
 
       <span
         className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-          reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-amber-100 text-amber-600'
+          reviewed ? 'bg-brand/15 text-brand-dark' : 'bg-pastel-peach/30 text-amber-600'
         }`}
       >
         {reviewed ? <CheckCircle2 size={13} /> : <Clock size={13} />}
         {reviewed ? 'Reviewed' : 'Pending'}
       </span>
-      <ChevronRight size={18} className="text-gray-300" />
+      <ChevronRight size={18} className="text-muted/60" />
     </button>
   )
 }
