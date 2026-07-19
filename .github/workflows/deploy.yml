@@ -1,0 +1,52 @@
+name: Deploy proNose to production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: SSH deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /home/dreamy-8/idig-its/pronose
+
+            echo "==> Pulling latest code..."
+            git pull origin main
+
+            echo "==> Installing server production dependencies..."
+            npm --prefix server install --omit=dev
+
+            echo "==> Installing client dependencies..."
+            npm --prefix client install
+
+            echo "==> Building React SPA..."
+            npm --prefix client run build
+
+            echo "==> Deploying nginx config..."
+            sudo cp nginx/pronose.gretiva.com.conf /etc/nginx/sites-available/pronose.gretiva.com
+            sudo nginx -t
+            sudo systemctl reload nginx
+
+            echo "==> Restarting application..."
+            pm2 restart pronose 2>/dev/null \
+              || pm2 start /home/dreamy-8/idig-its/pronose/server/src/index.js \
+                   --name pronose \
+                   --cwd /home/dreamy-8/idig-its/pronose/server
+
+            echo "==> Persisting PM2 process list..."
+            pm2 save
+
+            echo "==> Deployment complete."
