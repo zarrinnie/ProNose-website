@@ -29,6 +29,7 @@ export function mapUser(u) {
     role: u.role,
     name: u.full_name,
     email: u.email,
+    prosthesisType: u.prosthesis_type || 'nose',
     mobile: u.mobile_number || '',
     dob: formatDob(u.date_of_birth),
     avatar: u.avatar_url || avatarFor(u),
@@ -59,6 +60,7 @@ export function mapConsultation(c) {
     patientId: c.patient_id,
     // Present on admin's global list (Consultation included its patient).
     patientName: c.patient?.full_name || '',
+    patientProsthesis: c.patient?.prosthesis_type || null,
     patientAvatar: c.patient ? `https://i.pravatar.cc/150?u=${encodeURIComponent(c.patient.email || c.patient.id)}` : undefined,
     answers: {
       doingOkay: c.q_doing_okay || '',

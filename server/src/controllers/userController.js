@@ -9,6 +9,8 @@ export async function list(req, res, next) {
     const where = {}
     if (req.user.role === 'doctor') {
       where.assigned_doctor_id = req.user.id
+      // Defensive scoping: a doctor only sees patients of their prosthesis type.
+      if (req.user.prosthesis_type) where.prosthesis_type = req.user.prosthesis_type
     } else if (req.query.role) {
       where.role = req.query.role
     }
@@ -51,11 +53,14 @@ export async function update(req, res, next) {
     if (mobile_number !== undefined) user.mobile_number = mobile_number
     if (email !== undefined) user.email = email
 
-    // Only admins may change roles and doctor assignments.
+    // Only admins may change roles, doctor assignments and prosthesis type.
     if (isAdmin) {
       if (req.body.role !== undefined) user.role = req.body.role
       if (req.body.assigned_doctor_id !== undefined) {
         user.assigned_doctor_id = req.body.assigned_doctor_id || null
+      }
+      if (req.body.prosthesis_type !== undefined) {
+        user.prosthesis_type = req.body.prosthesis_type || null
       }
     }
 

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
-import { sequelize, User, Consultation, Message } from './models/index.js'
+import { sequelize, User, Consultation, Message, CareGuide } from './models/index.js'
+import { CARE_GUIDES } from './data/careGuides.js'
 
 dotenv.config()
 
@@ -22,12 +23,23 @@ async function seed() {
     password_hash,
   })
 
+  // Doctors are scoped to a single prosthesis programme.
   const doctor = await User.create({
     role: 'doctor',
     full_name: 'Dr. Lena Hart',
     email: 'lena.hart@pronose.com',
     mobile_number: '+1 (415) 555-0111',
     password_hash,
+    prosthesis_type: 'nose',
+  })
+
+  const earDoctor = await User.create({
+    role: 'doctor',
+    full_name: 'Dr. Marcus Ito',
+    email: 'marcus.ito@pronose.com',
+    mobile_number: '+1 (415) 555-0122',
+    password_hash,
+    prosthesis_type: 'microtia',
   })
 
   const patient = await User.create({
@@ -38,6 +50,19 @@ async function seed() {
     date_of_birth: '1991-03-14',
     password_hash,
     assigned_doctor_id: doctor.id,
+    prosthesis_type: 'nose',
+  })
+
+  // Second demo patient on the microtia (ear) track, under the ear doctor.
+  const earPatient = await User.create({
+    role: 'patient',
+    full_name: 'Noah Kim',
+    email: 'noah.kim@example.com',
+    mobile_number: '+1 (415) 555-0173',
+    date_of_birth: '2007-08-22',
+    password_hash,
+    assigned_doctor_id: earDoctor.id,
+    prosthesis_type: 'microtia',
   })
 
   const PLACEHOLDER = 'https://placehold.co/600x400/F0F8FF/33E4DB?text=Prosthetic+Photo'
@@ -107,6 +132,39 @@ async function seed() {
       additional_comments: 'Would love tips on cleaning.',
       created_at: new Date('2026-05-31T08:45:00'),
     },
+    // Microtia patient check-ins.
+    {
+      patient_id: earPatient.id,
+      type: 'regular',
+      status: 'reviewed',
+      prosthetic_image_url: PLACEHOLDER,
+      doctor_notes: 'Fit looks good. Keep the skin behind the ear clean and dry.',
+      q_doing_okay: 'Feeling good, getting the hang of putting it on.',
+      q_discomfort: 'A little pressure behind the ear after a long day.',
+      q_color_fading: false,
+      q_color_fading_details: '',
+      q_deforming: false,
+      q_deforming_details: '',
+      q_daily_issues: 'Glasses sometimes nudge the edge.',
+      additional_comments: 'First weekly check-in.',
+      created_at: new Date('2026-06-15T11:00:00'),
+    },
+    {
+      patient_id: earPatient.id,
+      type: 'regular',
+      status: 'pending',
+      prosthetic_image_url: PLACEHOLDER,
+      doctor_notes: '',
+      q_doing_okay: 'All good this week.',
+      q_discomfort: 'None.',
+      q_color_fading: false,
+      q_color_fading_details: '',
+      q_deforming: false,
+      q_deforming_details: '',
+      q_daily_issues: 'Cleaning the detailed folds takes practice.',
+      additional_comments: '',
+      created_at: new Date('2026-06-22T09:30:00'),
+    },
   ])
 
   await Message.bulkCreate([
@@ -131,10 +189,14 @@ async function seed() {
     },
   ])
 
+  await CareGuide.bulkCreate(CARE_GUIDES)
+
   console.log('Seed complete. Demo accounts (password: password123):')
   console.log('  super_admin  admin@pronose.com')
-  console.log('  doctor       lena.hart@pronose.com')
-  console.log('  patient      amelia.rose@example.com')
+  console.log('  doctor       lena.hart@pronose.com    (nose)')
+  console.log('  doctor       marcus.ito@pronose.com   (microtia)')
+  console.log('  patient      amelia.rose@example.com  (nose)')
+  console.log('  patient      noah.kim@example.com     (microtia)')
 
   await sequelize.close()
 }

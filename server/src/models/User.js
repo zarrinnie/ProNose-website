@@ -26,6 +26,12 @@ User.init(
       allowNull: false,
       defaultValue: 'patient',
     },
+    // Which prosthesis this patient is cared for. Chosen at registration;
+    // drives the app theme and scopes their care guides. Null for staff.
+    prosthesis_type: {
+      type: DataTypes.ENUM('nose', 'microtia', 'ocular', 'digit'),
+      allowNull: true,
+    },
     full_name: {
       type: DataTypes.STRING,
       allowNull: false,

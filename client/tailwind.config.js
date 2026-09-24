@@ -4,11 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Channel-based CSS vars so the whole brand palette re-themes per
+        // prosthesis type (see index.css :root / [data-prosthesis="…"]).
+        // Using "rgb(var(--x) / <alpha-value>)" keeps alpha utilities like
+        // bg-brand/15 working.
         brand: {
-          DEFAULT: '#1FB5AC',
-          dark: '#0E7C88',
-          deep: '#0A5866',
-          light: '#7FDCD2',
+          DEFAULT: 'rgb(var(--brand) / <alpha-value>)',
+          dark: 'rgb(var(--brand-dark) / <alpha-value>)',
+          deep: 'rgb(var(--brand-deep) / <alpha-value>)',
+          light: 'rgb(var(--brand-light) / <alpha-value>)',
         },
         ink: '#1F2547',
         muted: '#8F9BB3',

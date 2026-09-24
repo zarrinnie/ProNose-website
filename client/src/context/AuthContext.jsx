@@ -6,12 +6,35 @@ import { getToken, setToken } from '../api/client'
 
 const AuthContext = createContext(null)
 
+const PROSTHESIS_KEY = 'pronose_prosthesis'
+
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
   const [isFirstLogin, setIsFirstLogin] = useState(false)
   const [consultations, setConsultations] = useState([])
+  // Prosthesis chosen on the public landing page, before an account exists.
+  // Persisted so the auth screens stay themed across a refresh.
+  const [selectedProsthesis, setSelectedProsthesisState] = useState(
+    () => localStorage.getItem(PROSTHESIS_KEY) || null,
+  )
   // While we rehydrate the session from a stored token on first load.
   const [loading, setLoading] = useState(Boolean(getToken()))
+
+  const setSelectedProsthesis = useCallback((slug) => {
+    setSelectedProsthesisState(slug)
+    if (slug) localStorage.setItem(PROSTHESIS_KEY, slug)
+    else localStorage.removeItem(PROSTHESIS_KEY)
+  }, [])
+
+  // Apply the active theme to the document root. Once logged in, a user's own
+  // type drives it (doctors → their prosthesis; admins/staff without a type →
+  // neutral nose). Before login, the landing selection themes the auth screens.
+  const activeProsthesis = currentUser
+    ? currentUser.prosthesisType || 'nose'
+    : selectedProsthesis || 'nose'
+  useEffect(() => {
+    document.documentElement.dataset.prosthesis = activeProsthesis
+  }, [activeProsthesis])
 
   // Patients have a global consultation list backing the dashboard.
   const refreshConsultations = useCallback(async (user) => {
@@ -35,6 +58,12 @@ export function AuthProvider({ children }) {
       try {
         const user = await fetchMe()
         if (!active) return
+        // Admin sessions are intentionally not persisted — a fresh load of
+        // /admin must always go back through /admin/login.
+        if (user.role === 'super_admin') {
+          setToken(null)
+          return // finally{} still runs -> setLoading(false)
+        }
         setCurrentUser(user)
         await refreshConsultations(user)
       } catch {
@@ -103,6 +132,9 @@ export function AuthProvider({ children }) {
       loading,
       isFirstLogin,
       consultations,
+      selectedProsthesis,
+      activeProsthesis,
+      setSelectedProsthesis,
       login,
       register,
       logout,
@@ -113,7 +145,7 @@ export function AuthProvider({ children }) {
       updateUser,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser, loading, isFirstLogin, consultations],
+    [currentUser, loading, isFirstLogin, consultations, selectedProsthesis, activeProsthesis],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

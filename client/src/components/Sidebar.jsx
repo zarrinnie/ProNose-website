@@ -11,8 +11,10 @@ export default function Sidebar() {
   const tabs = navTabs(currentUser?.role)
 
   const handleLogout = () => {
+    // Admins return to their dedicated login; everyone else to the public one.
+    const dest = currentUser?.role === 'super_admin' ? '/admin/login' : '/login'
     logout()
-    navigate('/login')
+    navigate(dest)
   }
 
   return (

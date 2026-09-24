@@ -1,8 +1,10 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { homeForRole } from '../lib/roles'
 
-// Gate for authenticated routes. Optionally restrict to specific roles.
-export default function ProtectedRoute({ children, roles }) {
+// Gate for authenticated routes. Optionally restrict to specific roles, and
+// send unauthenticated visitors to a specific login page (defaults to /login).
+export default function ProtectedRoute({ children, roles, loginPath = '/login' }) {
   const { isAuthenticated, loading, currentUser } = useAuth()
 
   // Wait for the stored session to rehydrate before deciding.
@@ -14,11 +16,11 @@ export default function ProtectedRoute({ children, roles }) {
     )
   }
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (!isAuthenticated) return <Navigate to={loginPath} replace />
 
   // Role mismatch — send the user to their own home.
   if (roles && !roles.includes(currentUser.role)) {
-    return <Navigate to="/" replace />
+    return <Navigate to={homeForRole(currentUser.role)} replace />
   }
 
   return children

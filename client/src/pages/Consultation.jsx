@@ -12,6 +12,7 @@ import TopBar from '../components/TopBar'
 import PillButton from '../components/PillButton'
 import { useAuth } from '../context/AuthContext'
 import { createConsultation } from '../api/consultations'
+import { prosthesisConfig } from '../lib/prostheses'
 
 const STEPS = ['Photo', 'Questions', 'Submit']
 
@@ -43,8 +44,10 @@ export default function Consultation() {
 
 function NewConsultation() {
   const navigate = useNavigate()
-  const { addConsultation } = useAuth()
+  const { addConsultation, currentUser } = useAuth()
   const fileRef = useRef(null)
+  // Question / photo copy adapts to the patient's prosthesis type.
+  const copy = prosthesisConfig(currentUser?.prosthesisType).questions
 
   const [step, setStep] = useState(0)
   const [photo, setPhoto] = useState(null)
@@ -65,7 +68,7 @@ function NewConsultation() {
     try {
       const created = await createConsultation({ answers, urgent, photoFile: photo?.file })
       addConsultation(created)
-      navigate('/', { state: { submitted: true, urgent } })
+      navigate('/dashboard', { state: { submitted: true, urgent } })
     } catch (err) {
       // e.g. "Image must be 10MB or smaller." from the backend.
       setError(err.message || 'Could not submit consultation.')
@@ -76,13 +79,13 @@ function NewConsultation() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <TopBar title="New Consultation" showBack onBack={() => navigate('/')} />
+      <TopBar title="New Consultation" showBack onBack={() => navigate('/dashboard')} />
 
       <Stepper step={step} />
 
       <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 pb-4 no-scrollbar">
-        {step === 0 && <PhotoStep photo={photo} fileRef={fileRef} onFile={handleFile} />}
-        {step === 1 && <QuestionStep answers={answers} setAns={setAns} />}
+        {step === 0 && <PhotoStep photo={photo} fileRef={fileRef} onFile={handleFile} copy={copy} />}
+        {step === 1 && <QuestionStep answers={answers} setAns={setAns} copy={copy} />}
         {step === 2 && (
           <SubmitStep
             comments={answers.comments}
@@ -155,13 +158,11 @@ function Stepper({ step }) {
   )
 }
 
-function PhotoStep({ photo, fileRef, onFile }) {
+function PhotoStep({ photo, fileRef, onFile, copy }) {
   return (
     <div>
-      <h3 className="text-lg font-bold text-ink">Upload a prosthetic photo</h3>
-      <p className="mt-1 text-sm text-muted">
-        Take a clear, well-lit photo of your prosthetic so your doctor can assess it.
-      </p>
+      <h3 className="text-lg font-bold text-ink">{copy.photoTitle}</h3>
+      <p className="mt-1 text-sm text-muted">{copy.photoHelp}</p>
 
       <input
         ref={fileRef}
@@ -201,26 +202,26 @@ function PhotoStep({ photo, fileRef, onFile }) {
   )
 }
 
-function QuestionStep({ answers, setAns }) {
+function QuestionStep({ answers, setAns, copy }) {
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-bold text-ink">Medical questionnaire</h3>
 
       <ShortText
-        label="Are you feeling alright?"
+        label={copy.doingOkay}
         value={answers.doingOkay}
         onChange={(v) => setAns('doingOkay', v)}
         placeholder="Describe how you're feeling overall"
       />
       <ShortText
-        label="Any discomfort with the new prosthetic?"
+        label={copy.discomfort}
         value={answers.discomfort}
         onChange={(v) => setAns('discomfort', v)}
-        placeholder="e.g. itching, pressure, soreness"
+        placeholder={copy.discomfortPlaceholder}
       />
 
       <YesNo
-        label="Is the prosthetic's colour fading or changing?"
+        label={copy.colorFading}
         value={answers.colorFading}
         onChange={(v) => setAns('colorFading', v)}
         details={answers.colorFadingDetails}
@@ -228,7 +229,7 @@ function QuestionStep({ answers, setAns }) {
         detailPlaceholder="Describe the colour change"
       />
       <YesNo
-        label="Is the prosthetic deforming or changing shape?"
+        label={copy.deforming}
         value={answers.deforming}
         onChange={(v) => setAns('deforming', v)}
         details={answers.deformingDetails}
@@ -237,10 +238,10 @@ function QuestionStep({ answers, setAns }) {
       />
 
       <ShortText
-        label="Any issues with daily use of the prosthetic?"
+        label={copy.dailyIssues}
         value={answers.dailyIssues}
         onChange={(v) => setAns('dailyIssues', v)}
-        placeholder="e.g. cleaning, adhesive, fit"
+        placeholder={copy.dailyIssuesPlaceholder}
       />
     </div>
   )
@@ -361,7 +362,7 @@ function ConsultationDetail({ consultation }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <TopBar title="Consultation" showBack onBack={() => navigate('/')} />
+      <TopBar title="Consultation" showBack onBack={() => navigate('/dashboard')} />
 
       <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 pb-6 pt-5 no-scrollbar">
         <div className="flex items-center justify-between">

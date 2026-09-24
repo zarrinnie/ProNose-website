@@ -21,6 +21,7 @@ export async function registerRequest(form) {
       mobile_number: form.mobile,
       password: form.password,
       date_of_birth: dobToISO(form.dob),
+      prosthesis_type: form.prosthesisType,
     },
   })
   setToken(token)

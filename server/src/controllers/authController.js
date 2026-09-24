@@ -23,11 +23,16 @@ export async function register(req, res, next) {
       date_of_birth,
       role,
       assigned_doctor_id,
+      prosthesis_type,
     } = req.body
 
     if (!full_name || !email || !password) {
       return res.status(400).json({ error: 'Full name, email, and password are required.' })
     }
+
+    // Only prosthesis types that are actually live may be self-registered.
+    const LIVE_PROSTHESES = ['nose', 'microtia']
+    const prosthesisType = LIVE_PROSTHESES.includes(prosthesis_type) ? prosthesis_type : 'nose'
 
     const password_hash = await bcrypt.hash(password, 10)
     const created = await User.create({
@@ -40,6 +45,7 @@ export async function register(req, res, next) {
       // or assigned by an admin.
       role: role === 'doctor' || role === 'super_admin' ? 'patient' : role || 'patient',
       assigned_doctor_id: assigned_doctor_id || null,
+      prosthesis_type: prosthesisType,
     })
 
     const token = signToken(created)

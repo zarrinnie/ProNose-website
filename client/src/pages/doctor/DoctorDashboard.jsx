@@ -13,6 +13,7 @@ import ConsultationReview from '../../components/ConsultationReview'
 import { useAuth } from '../../context/AuthContext'
 import { listUsers } from '../../api/users'
 import { listConsultations } from '../../api/consultations'
+import { prosthesisConfig } from '../../lib/prostheses'
 
 export default function DoctorDashboard() {
   const { currentUser } = useAuth()
@@ -28,10 +29,16 @@ export default function DoctorDashboard() {
   }
 
   const firstName = currentUser?.name?.split(' ')[0] || 'Doctor'
+  const prosthesisLabel = currentUser?.prosthesisType
+    ? prosthesisConfig(currentUser.prosthesisType).label
+    : null
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <TopBar eyebrow={`Welcome back, ${firstName} 👋`} title="My Patients" />
+      <TopBar
+        eyebrow={prosthesisLabel ? `${prosthesisLabel} care team · Welcome back, ${firstName} 👋` : `Welcome back, ${firstName} 👋`}
+        title="My Patients"
+      />
       <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 pb-6 pt-2 no-scrollbar md:px-8">
         <p className="text-sm text-muted">Select a patient to review their consultations.</p>
 

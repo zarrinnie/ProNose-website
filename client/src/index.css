@@ -6,6 +6,30 @@
 
 :root {
   color-scheme: light;
+
+  /* Brand palette as space-separated RGB channels (consumed by Tailwind's
+     rgb(var(--brand) / <alpha-value>) tokens). Default = nose / teal. */
+  --brand: 31 181 172;
+  --brand-dark: 14 124 136;
+  --brand-deep: 10 88 102;
+  --brand-light: 127 220 210;
+
+  /* Three stops of the frosted background gradient, themed per prosthesis. */
+  --bg-a: 198 190 233;
+  --bg-b: 213 239 224;
+  --bg-c: 200 195 230;
+}
+
+/* Microtia (ear) — purple family, sitting next to pastel.lavender (#B3AEF0). */
+[data-prosthesis='microtia'] {
+  --brand: 139 126 224;
+  --brand-dark: 91 76 184;
+  --brand-deep: 62 50 135;
+  --brand-light: 195 186 242;
+
+  --bg-a: 205 195 240;
+  --bg-b: 224 214 245;
+  --bg-c: 199 190 235;
 }
 
 * {
@@ -21,11 +45,12 @@ body,
 body {
   margin: 0;
   font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  /* Soft mint → sky → lavender gradient behind the glass panels */
+  /* Soft mint → sky → lavender gradient behind the glass panels, themed
+     per prosthesis via the --bg-* channels. */
   background:
-    radial-gradient(55rem 38rem at 88% 6%, rgba(198, 190, 233, 0.85), transparent 62%),
-    radial-gradient(48rem 34rem at 6% 18%, rgba(213, 239, 224, 0.9), transparent 60%),
-    linear-gradient(118deg, #d8ece1 0%, #cfe2e9 48%, #c8c3e6 100%);
+    radial-gradient(55rem 38rem at 88% 6%, rgb(var(--bg-a) / 0.85), transparent 62%),
+    radial-gradient(48rem 34rem at 6% 18%, rgb(var(--bg-b) / 0.9), transparent 60%),
+    linear-gradient(118deg, rgb(var(--bg-b) / 0.95) 0%, rgb(var(--bg-c) / 0.9) 48%, rgb(var(--bg-a) / 0.95) 100%);
   background-attachment: fixed;
   color: #1f2547;
   -webkit-font-smoothing: antialiased;

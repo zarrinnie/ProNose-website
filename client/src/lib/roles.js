@@ -1,10 +1,10 @@
-import { Home, ClipboardPlus, MessageCircle, User, Users, Stethoscope } from 'lucide-react'
+import { Home, ClipboardPlus, MessageCircle, User, Users, Stethoscope, HeartPulse } from 'lucide-react'
 
 // Landing route for each role after login.
 export function homeForRole(role) {
   if (role === 'doctor') return '/doctor'
   if (role === 'super_admin') return '/admin'
-  return '/'
+  return '/dashboard'
 }
 
 export function roleLabel(role) {
@@ -14,8 +14,9 @@ export function roleLabel(role) {
 }
 
 const PATIENT_TABS = [
-  { to: '/', label: 'Home', icon: Home, end: true },
+  { to: '/dashboard', label: 'Home', icon: Home, end: true },
   { to: '/consultation', label: 'Consult', icon: ClipboardPlus, end: false },
+  { to: '/care', label: 'Care', icon: HeartPulse, end: false },
   { to: '/chat', label: 'Chat', icon: MessageCircle, end: false },
   { to: '/profile', label: 'Profile', icon: User, end: false },
 ]

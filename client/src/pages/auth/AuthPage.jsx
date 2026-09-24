@@ -6,18 +6,32 @@ import PillButton from '../../components/PillButton'
 import SocialLogins from '../../components/SocialLogins'
 import { useAuth } from '../../context/AuthContext'
 import { homeForRole } from '../../lib/roles'
+import { prosthesisConfig } from '../../lib/prostheses'
 
 // Tabbed auth card. `initialTab` comes from the route so tabs stay URL-synced.
 export default function AuthPage({ initialTab = 'login' }) {
   const navigate = useNavigate()
+  const { selectedProsthesis } = useAuth()
   const isLogin = initialTab === 'login'
+  const prosthesis = selectedProsthesis ? prosthesisConfig(selectedProsthesis) : null
 
   return (
     <AuthLayout>
-      {/* Teal header strip */}
+      {/* Brand header strip (themed to the chosen prosthesis) */}
       <div className="bg-brand px-6 py-5 text-center md:rounded-tr-3xl">
         <h1 className="text-xl font-bold text-white">{isLogin ? 'Welcome Back' : 'New Account'}</h1>
+        {prosthesis && (
+          <p className="mt-1 text-sm font-medium text-white/85">{prosthesis.label} care</p>
+        )}
       </div>
+
+      {/* Let the user go back and pick a different prosthesis. */}
+      <button
+        onClick={() => navigate('/')}
+        className="px-6 pt-3 text-left text-xs font-semibold text-brand-dark transition hover:text-brand-deep"
+      >
+        ← Change prosthesis
+      </button>
 
       {/* Tabs */}
       <div className="flex border-b border-gray-100">
@@ -118,7 +132,7 @@ function LoginForm() {
 
 function SignUpForm() {
   const navigate = useNavigate()
-  const { register } = useAuth()
+  const { register, selectedProsthesis } = useAuth()
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -140,7 +154,8 @@ function SignUpForm() {
     setError('')
     setSubmitting(true)
     try {
-      const user = await register(form)
+      // Carry the prosthesis chosen on the landing page into the new account.
+      const user = await register({ ...form, prosthesisType: selectedProsthesis || 'nose' })
       navigate(homeForRole(user.role))
     } catch (err) {
       setError(err.message || 'Unable to create account.')
